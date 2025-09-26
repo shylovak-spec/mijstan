@@ -7,8 +7,8 @@
     <style>
         /* Стилі для рожевих тонів та привабливого вигляду */
         :root {
-            --primary-color: #ff99cc; /* Насичений рожевий */
-            --secondary-color: #ffe6f2; /* Світло-рожевий фон */
+            --primary-color: #ff99cc;
+            --secondary-color: #ffe6f2;
             --text-color: #333;
             --border-radius: 15px;
         }
@@ -54,14 +54,46 @@
             font-size: 1.1em;
             color: var(--primary-color);
         }
-        
-        /* Змінений стиль для multiselect */
-        select[multiple] {
-            height: auto; /* Дозволяє висоті адаптуватися до кількості опцій */
-            min-height: 200px; /* Мінімальна висота для зручного вибору */
+
+        /* --- СТИЛІ ДЛЯ ЧЕКБОКСІВ (НОВІ) --- */
+        .emotion-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            background-color: #fff;
         }
-        
-        select, textarea {
+
+        .emotion-item {
+            display: flex;
+            align-items: center;
+            /* Стилі для самої кнопки-мітки */
+            background-color: var(--secondary-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        /* Приховуємо справжній чекбокс */
+        .emotion-checkbox {
+            display: none;
+        }
+
+        /* Стиль для вибраного чекбоксу */
+        .emotion-checkbox:checked + .emotion-item {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+        /* ------------------------------------- */
+
+
+        textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid var(--primary-color);
@@ -72,15 +104,12 @@
             background-color: #fff;
             transition: border-color 0.3s;
             resize: vertical;
+            min-height: 150px;
         }
 
-        select:focus, textarea:focus {
+        textarea:focus {
             border-color: #ff66b2;
             outline: none;
-        }
-
-        textarea {
-            min-height: 150px;
         }
 
         button {
@@ -125,40 +154,18 @@
         
         /* === АДАПТАЦІЯ ДЛЯ МОБІЛЬНИХ === */
         @media (max-width: 600px) {
-            body {
-                padding: 10px; 
-                align-items: flex-start;
-            }
-
-            .container {
-                padding: 20px; 
-                border-radius: 0; 
-                box-shadow: none; 
-            }
+            body { padding: 10px; align-items: flex-start; }
+            .container { padding: 20px; border-radius: 0; box-shadow: none; }
+            h1 { font-size: 1.8em; margin-bottom: 20px; }
+            label { font-size: 1em; }
+            textarea, button { padding: 10px; border-radius: 10px; }
+            textarea { min-height: 120px; }
             
-            h1 {
-                font-size: 1.8em; 
-                margin-bottom: 20px;
-            }
-
-            label {
-                 font-size: 1em;
-            }
-            
-            select, textarea, button {
+            .emotion-list {
+                gap: 8px; /* Менші проміжки на мобільному */
                 padding: 10px;
-                border-radius: 10px;
-            }
-
-            textarea {
-                 min-height: 120px;
-            }
-            
-            select[multiple] {
-                 min-height: 150px; /* Менша мінімальна висота для мобільного */
             }
         }
-
     </style>
 </head>
 <body>
@@ -173,20 +180,42 @@
     <form id="emotionForm">
 
         <div class="form-group">
-            <label for="emotion">Мої поточні відчуття/емоції (затисніть Ctrl/Cmd для вибору кількох):</label>
-            <select id="emotion" name="Емоція" multiple required>
-                <option value="Я в шоці">Я в шоці 🤯</option>
-                <option value="Сум">Сум 🌧️</option>
-                <option value="Тривога">Тривога 😟</option>
-                <option value="Дискомфорт">Дискомфорт 😔</option>
-                <option value="Злість">Злість 😠</option>
-                <option value="Роздратування">Роздратування 😤</option>
-                <option value="Нейтрально">Нейтрально 😐</option>
-                <option value="Втома">Втома 😴</option>
-                <option value="Безвихідь">Безвихідь 🌑</option>
-                <option value="Радість">Радість 😊</option>
-                <option value="Задоволення">Задоволення 😄</option>
-            </select>
+            <label>Мої поточні відчуття/емоції (оберіть усі, що підходять):</label>
+            <div class="emotion-list">
+                
+                <input type="checkbox" id="e_shock" name="Емоція" value="Я в шоці" class="emotion-checkbox">
+                <label for="e_shock" class="emotion-item">Я в шоці 🤯</label>
+
+                <input type="checkbox" id="e_sad" name="Емоція" value="Сум" class="emotion-checkbox">
+                <label for="e_sad" class="emotion-item">Сум 🌧️</label>
+
+                <input type="checkbox" id="e_anx" name="Емоція" value="Тривога" class="emotion-checkbox">
+                <label for="e_anx" class="emotion-item">Тривога 😟</label>
+
+                <input type="checkbox" id="e_dis" name="Емоція" value="Дискомфорт" class="emotion-checkbox">
+                <label for="e_dis" class="emotion-item">Дискомфорт 😔</label>
+
+                <input type="checkbox" id="e_anger" name="Емоція" value="Злість" class="emotion-checkbox">
+                <label for="e_anger" class="emotion-item">Злість 😠</label>
+
+                <input type="checkbox" id="e_irri" name="Емоція" value="Роздратування" class="emotion-checkbox">
+                <label for="e_irri" class="emotion-item">Роздратування 😤</label>
+
+                <input type="checkbox" id="e_neut" name="Емоція" value="Нейтрально" class="emotion-checkbox">
+                <label for="e_neut" class="emotion-item">Нейтрально 😐</label>
+
+                <input type="checkbox" id="e_tired" name="Емоція" value="Втома" class="emotion-checkbox">
+                <label for="e_tired" class="emotion-item">Втома 😴</label>
+
+                <input type="checkbox" id="e_hopeless" name="Емоція" value="Безвихідь" class="emotion-checkbox">
+                <label for="e_hopeless" class="emotion-item">Безвихідь 🌑</label>
+
+                <input type="checkbox" id="e_joy" name="Емоція" value="Радість" class="emotion-checkbox">
+                <label for="e_joy" class="emotion-item">Радість 😊</label>
+
+                <input type="checkbox" id="e_satis" name="Емоція" value="Задоволення" class="emotion-checkbox">
+                <label for="e_satis" class="emotion-item">Задоволення 😄</label>
+            </div>
         </div>
 
         <div class="form-group">
@@ -214,36 +243,38 @@
         
         const form = e.target;
         const responseMessage = document.getElementById('responseMessage');
-        const emotionSelect = document.getElementById('emotion');
         
-        // Збір даних про обрані емоції
-        let selectedEmotions = Array.from(emotionSelect.selectedOptions)
-                                    .map(option => option.value)
-                                    .join(', '); // Об'єднуємо у рядок через кому
+        // НОВА ЛОГІКА ЗБОРУ ДАНИХ З ЧЕКБОКСІВ
+        const checkedEmotions = Array.from(document.querySelectorAll('input[name="Емоція"]:checked'))
+                                     .map(checkbox => checkbox.value)
+                                     .join(', '); // Об'єднуємо у рядок
                                     
         const thoughts = document.getElementById('thoughts').value;
         const events = document.getElementById('events').value;
         
-        // Створення FormData з вручну зібраними даними
+        // Створення FormData
         const formData = new FormData();
-        formData.append('Емоція', selectedEmotions);
+        formData.append('Емоція', checkedEmotions); // Надсилаємо об'єднаний рядок
         formData.append('Думки', thoughts);
         formData.append('Події', events);
+
+        if (!checkedEmotions) {
+            responseMessage.textContent = '❌ Будь ласка, оберіть хоча б одну емоцію.';
+            responseMessage.style.color = 'red';
+            return; // Зупиняємо відправку, якщо емоції не вибрано
+        }
 
         responseMessage.textContent = 'Відправка... ⏳';
         
         fetch(scriptURL, {
             method: 'POST',
             body: formData,
-            // Цей заголовок важливий для коректної роботи зі скриптом Google
             mode: 'no-cors' 
         })
         .then(() => {
             responseMessage.textContent = '✅ Запис успішно збережено!';
             responseMessage.style.color = 'green';
-            // Очищення полів форми
             form.reset();
-            // Зникнення повідомлення через 3 секунди
             setTimeout(() => {
                 responseMessage.textContent = '';
             }, 3000);
