@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Щоденник Емоцій 🌸</title>
+    <style>
+        /* Стилі для рожевих тонів та привабливого вигляду */
+        :root {
+            --primary-color: #ff99cc; /* Насичений рожевий */
+            --secondary-color: #ffe6f2; /* Світло-рожевий фон */
+            --text-color: #333;
+            --border-radius: 15px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+            font-size: 1em;
+            color: var(--text-color);
+            background-color: #fff;
+            transition: border-color 0.3s;
+            resize: vertical;
+        }
+
+        select:focus, textarea:focus {
+            border-color: #ff66b2; /* Яскравіший рожевий при фокусі */
+            outline: none;
+        }
+
+        textarea {
+            min-height: 150px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #ff66b2; /* Темніший рожевий при наведенні */
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #responseMessage {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: green;
+        }
+
+        /* Стилі для нейтрального візуального елемента */
+        .decoration-image {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .decoration-image span {
+            font-size: 4em;
+            display: inline-block;
+            color: var(--primary-color);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="decoration-image">
+        <span>✨</span>
+    </div>
+
+    <h1>💖 Щоденник Емоцій 💖</h1>
+
+    <form id="emotionForm">
+
+        <div class="form-group">
+            <label for="emotion">Моє поточне відчуття/емоція:</label>
+            <select id="emotion" name="Емоція" required>
+                <option value="" disabled selected>Оберіть, як ви почуваєтесь...</option>
+                <option value="Сум">Сум 🌧️</option>
+                <option value="Тривога">Тривога 😟</option>
+                <option value="Дискомфорт">Дискомфорт 😔</option>
+                <option value="Злість">Злість 😠</option>
+                <option value="Роздратування">Роздратування 😤</option>
+                <option value="Нейтрально">Нейтрально 😐</option>
+                <option value="Втома">Втома 😴</option>
+                <option value="Безвихідь">Безвихідь 🌑</option>
+                <option value="Радість">Радість 😊</option>
+                <option value="Задоволення">Задоволення 😄</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="thoughts">Мої думки:</label>
+            <textarea id="thoughts" name="Думки" placeholder="Запишіть свої думки, які супроводжують цю емоцію..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="events">Події:</label>
+            <textarea id="events" name="Події" placeholder="Опишіть, що сталося (події, ситуації), що викликали цю емоцію..." required></textarea>
+        </div>
+
+        <button type="submit">✍️ Зберегти запис</button>
+
+        <div id="responseMessage"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('emotionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // **!!! ВАЖЛИВО: Вставте тут URL вашого Google Apps Script, отриманий після налаштування !!!**
+        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'; // ⬅️ ЗАМІНИТИ
+        
+        const form = e.target;
+        const formData = new FormData(form);
+        const responseMessage = document.getElementById('responseMessage');
+
+        responseMessage.textContent = 'Відправка... ⏳';
+        
+        fetch(scriptURL, {
+            method: 'POST',
+            body: formData,
+            // Цей заголовок важливий для коректної роботи зі скриптом Google
+            mode: 'no-cors' 
+        })
+        .then(() => {
+            responseMessage.textContent = '✅ Запис успішно збережено!';
+            responseMessage.style.color = 'green';
+            // Очищення полів форми
+            form.reset();
+            // Зникнення повідомлення через 3 секунди
+            setTimeout(() => {
+                responseMessage.textContent = '';
+            }, 3000);
+        })
+        .catch(error => {
+            console.error('Помилка відправки!', error.message);
+            responseMessage.textContent = '❌ Помилка при збереженні запису. Спробуйте пізніше.';
+            responseMessage.style.color = 'red';
+        });
+    });
+</script>
+
+</body>
+</html>
